@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rasio Ranger : Tantangan Matematika Masa Depan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f0fdfa; /* mint green light */
+            overflow-x: hidden;
+        }
+        .pastel-blue { background-color: #e0f2fe; }
+        .pastel-yellow { background-color: #fef08a; }
+        .pastel-mint { background-color: #ccfbf1; }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        
+        .slide-up {
+            animation: slideUp 0.5s ease-out forwards;
+        }
+
+        .bounce-slow {
+            animation: bounceSlow 3s infinite;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounceSlow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #5eead4; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #14b8a6; }
+
+        .emoji-lg { font-size: 3rem; margin: 0.2rem; }
+        .emoji-md { font-size: 2rem; margin: 0.2rem; }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col justify-center items-center p-4">
+
+    <!-- Main Container -->
+    <div id="app-container" class="w-full max-w-5xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col" style="height: 90vh; max-height: 800px;">
+        
+        <!-- Start Screen -->
+        <div id="start-screen" class="flex-1 flex flex-col items-center justify-center p-8 bg-gradient-to-br from-cyan-100 to-blue-200 fade-in relative">
+            <div class="absolute top-4 right-4 animate-pulse text-yellow-400 text-6xl opacity-50"><i class="fas fa-star"></i></div>
+            <div class="absolute bottom-10 left-10 text-teal-400 text-6xl opacity-50 bounce-slow"><i class="fas fa-rocket"></i></div>
+            
+            <h1 class="text-4xl md:text-6xl font-extrabold text-blue-600 mb-4 text-center drop-shadow-sm">Rasio Ranger</h1>
+            <h2 class="text-xl md:text-2xl font-bold text-slate-700 mb-8 text-center">Tantangan Matematika Masa Depan</h2>
+            
+            <div class="bg-white/80 backdrop-blur rounded-2xl p-6 shadow-lg mb-8 w-full max-w-md">
+                <h3 class="font-bold text-lg mb-4 text-center border-b pb-2">Pengaturan Misi</h3>
+                
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="font-semibold text-sm">Suara Narator:</span>
+                        <div class="flex space-x-2">
+                            <button onclick="setVoice('male')" id="btn-voice-male" class="px-3 py-1 rounded-full bg-blue-500 text-white text-sm transition shadow">Laki-laki</button>
+                            <button onclick="setVoice('female')" id="btn-voice-female" class="px-3 py-1 rounded-full bg-gray-200 text-gray-700 text-sm transition shadow">Perempuan</button>
+                            <button onclick="setVoice('none')" id="btn-voice-none" class="px-3 py-1 rounded-full bg-gray-200 text-gray-700 text-sm transition shadow"><i class="fas fa-volume-mute"></i></button>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="font-semibold text-sm">Kecepatan:</span>
+                        <select id="speed-select" class="bg-gray-100 rounded-lg p-1 text-sm outline-none cursor-pointer">
+                            <option value="1">Normal</option>
+                            <option value="0.8">Lambat</option>
+                        </select>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="font-semibold text-sm">Teks Subtitle:</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="subtitle-toggle" class="sr-only peer" checked>
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="startGame()" class="px-8 py-4 bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white font-bold rounded-full shadow-xl transform transition hover:scale-105 text-xl flex items-center gap-3">
+                <i class="fas fa-play"></i> MULAI PETUALANGAN
+            </button>
+        </div>
+
+        <!-- Game Screen (Hidden Initially) -->
+        <div id="game-screen" class="hidden flex-1 flex-col h-full bg-white relative">
+            
+            <!-- Topbar / Header -->
+            <div class="h-16 bg-white shadow-sm flex items-center justify-between px-6 z-10 border-b-4 border-slate-100">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-teal-100 text-teal-600 rounded-full flex items-center justify-center font-bold text-xl">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div>
+                        <h3 id="scene-title" class="font-bold text-slate-800 text-lg leading-tight">Misi Rahasia</h3>
+                        <div class="w-48 h-2 bg-gray-200 rounded-full mt-1">
+                            <div id="progress-bar" class="h-2 bg-teal-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="toggleAudio()" id="btn-audio-toggle" class="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-slate-600 transition">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <button onclick="backToMenu()" class="w-10 h-10 rounded-full bg-red-50 hover:bg-red-100 flex items-center justify-center text-red-500 transition">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content Area (Visuals) -->
+            <div id="visual-area" class="flex-1 flex flex-col items-center justify-center p-6 bg-slate-50 relative overflow-y-auto">
+                <!-- Visuals injected by JS -->
+            </div>
+
+            <!-- Quiz / Interaction Panel -->
+            <div id="quiz-area" class="hidden w-full bg-white border-t-2 border-gray-100 p-6 flex flex-col items-center slide-up shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.05)]">
+                <h4 id="quiz-question" class="text-lg font-bold text-center mb-4 text-slate-700">Pertanyaan...</h4>
+                <div id="quiz-options" class="grid grid-cols-2 gap-4 w-full max-w-2xl mb-4">
+                    <!-- Options injected by JS -->
+                </div>
+                <div class="flex gap-4">
+                    <button onclick="showHint()" id="btn-hint" class="px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 font-semibold transition text-sm">
+                        <i class="fas fa-lightbulb mr-2"></i>Lihat Petunjuk
+                    </button>
+                </div>
+            </div>
+
+            <!-- Subtitle & Navigation Area -->
+            <div class="h-28 bg-slate-800 text-white flex items-center px-4 md:px-8 justify-between z-10 shrink-0">
+                <button onclick="prevScene()" id="btn-prev" class="w-12 h-12 rounded-full bg-slate-700 hover:bg-slate-600 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition shrink-0">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                
+                <div class="flex-1 px-4 md:px-8 text-center h-full flex items-center justify-center">
+                    <p id="subtitle-text" class="text-sm md:text-lg font-medium leading-snug">
+                        Halo, Detektif Matematika!
+                    </p>
+                </div>
+                
+                <button onclick="nextScene()" id="btn-next" class="w-12 h-12 rounded-full bg-teal-500 hover:bg-teal-400 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition shadow-lg shrink-0">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Custom Modal for Feedback / Hints -->
+    <div id="custom-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 transform transition scale-95 opacity-0" id="modal-content">
+            <div id="modal-icon" class="text-5xl text-center mb-4">✨</div>
+            <h3 id="modal-title" class="text-2xl font-bold text-center mb-2 text-slate-800">Judul Modal</h3>
+            <p id="modal-body" class="text-slate-600 text-center mb-6">Pesan di sini.</p>
+            <div class="flex justify-center gap-3" id="modal-actions">
+                <button onclick="closeModal()" class="px-6 py-2 bg-teal-500 text-white rounded-full font-bold hover:bg-teal-600 transition">Mengerti!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data & Script -->
+    <script>
+        // --- 1. GAME DATA & SCENES ---
+        const scenes = [
+            {
+                id: 1,
+                title: "Adegan 1: Pembukaan Misteri",
+                type: "story",
+                visual: `
+                    <div class="text-center fade-in">
+                        <div class="text-6xl mb-4 bounce-slow">🕵️‍♂️ 🤖</div>
+                        <div class="bg-blue-600 text-white px-6 py-3 rounded-lg font-mono text-2xl font-bold border-4 border-blue-300 shadow-[0_0_15px_rgba(37,99,235,0.5)]">
+                            [ MISI RAHASIA: PECAHKAN RASIO! ]
+                        </div>
+                    </div>
+                `,
+                narration: "Halo, Detektif Matematika! Pernahkah kalian membandingkan jumlah pensil merah dan pensil biru? Atau menghitung berapa banyak siswa yang membawa bekal buah? Ternyata, kegiatan sederhana itu berhubungan dengan rasio! Hari ini, kita akan menjadi detektif yang memecahkan rahasia perbandingan. Siap menerima tantangan?"
+            },
+            {
+                id: 2,
+                title: "Adegan 2: Memahami Arti Rasio",
+                type: "story",
+                visual: `
+                    <div class="flex flex-col items-center justify-center fade-in w-full max-w-2xl">
+                        <div class="flex justify-around w-full mb-8">
+                            <div class="text-center bg-white p-4 rounded-xl shadow-md border-2 border-red-100 slide-up" style="animation-delay: 0.2s">
+                                <div class="text-4xl mb-2">🍎🍎🍎🍎</div>
+                                <div class="font-bold text-red-500 text-xl">4 Apel Merah</div>
+                            </div>
+                            <div class="text-center bg-white p-4 rounded-xl shadow-md border-2 border-green-100 slide-up" style="animation-delay: 0.5s">
+                                <div class="text-4xl mb-2">🍏🍏</div>
+                                <div class="font-bold text-green-500 text-xl">2 Apel Hijau</div>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-2 border-yellow-200 p-4 rounded-xl text-center shadow-inner w-full slide-up" style="animation-delay: 0.8s">
+                            <p class="text-lg font-bold text-slate-700">Apel Merah : Apel Hijau = <span class="text-3xl text-red-500">4</span> : <span class="text-3xl text-green-500">2</span></p>
+                            <p class="text-lg font-bold text-slate-700 mt-2">Apel Hijau : Apel Merah = <span class="text-3xl text-green-500">2</span> : <span class="text-3xl text-red-500">4</span></p>
+                        </div>
+                    </div>
+                `,
+                narration: "Perhatikan! Ada empat apel merah dan dua apel hijau. Jika kita membandingkan apel merah dengan apel hijau, rasionya adalah empat banding dua, ditulis 4:2. Urutan sangat penting! Rasio apel hijau terhadap apel merah adalah 2:4."
+            },
+            {
+                id: 3,
+                title: "Adegan 3: Kehidupan Sehari-hari",
+                type: "story",
+                visual: `
+                    <div class="flex flex-col items-center justify-center fade-in">
+                        <div class="text-5xl mb-4 bg-white p-6 rounded-2xl shadow border-2 border-slate-200">
+                            <span class="mr-4">✏️✏️✏️✏️✏️✏️</span> <span class="text-slate-300">|</span> <span class="ml-4">🖊️🖊️🖊️</span>
+                        </div>
+                        <div class="bg-blue-50 p-6 rounded-xl border-l-4 border-blue-400 mt-4 slide-up w-full max-w-lg text-center">
+                            <p class="text-xl font-bold text-slate-700 mb-2">Kuning : Biru = 6 : 3</p>
+                            <div class="flex items-center justify-center gap-4 text-blue-600 font-bold">
+                                <span>6 : 3</span>
+                                <i class="fas fa-arrow-right text-slate-400"></i>
+                                <span class="bg-blue-200 px-2 py-1 rounded text-sm text-blue-800">Disederhanakan (÷3)</span>
+                                <i class="fas fa-arrow-right text-slate-400"></i>
+                                <span class="text-2xl text-teal-600">2 : 1</span>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                narration: "Rasio tidak hanya ada dalam buku matematika. Di dalam kotak ini ada enam pensil kuning dan tiga pensil biru. Rasio pensil kuning terhadap pensil biru adalah 6:3. Kedua bilangan ini dapat disederhanakan dengan membagi keduanya dengan tiga. Hasilnya adalah 2:1."
+            },
+            {
+                id: 4,
+                title: "Adegan 4: Rasio Senilai",
+                type: "story",
+                visual: `
+                    <div class="flex flex-col items-center justify-center fade-in w-full max-w-3xl">
+                        <div class="grid grid-cols-2 gap-8 w-full mb-6">
+                            <div class="bg-white p-4 rounded-xl shadow-md border-t-4 border-red-400 text-center">
+                                <h4 class="font-bold text-slate-600 mb-2">Kelompok 1</h4>
+                                <div class="text-2xl mb-2">🔴🔴 <br> 🔵🔵🔵🔵</div>
+                                <div class="font-bold text-lg bg-red-50 rounded py-1">2 : 4</div>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl shadow-md border-t-4 border-blue-400 text-center">
+                                <h4 class="font-bold text-slate-600 mb-2">Kelompok 2</h4>
+                                <div class="text-2xl mb-2">🔴🔴🔴🔴 <br> 🔵🔵🔵🔵🔵🔵🔵🔵</div>
+                                <div class="font-bold text-lg bg-blue-50 rounded py-1">4 : 8</div>
+                            </div>
+                        </div>
+                        <div class="bg-teal-50 border border-teal-200 p-4 rounded-xl text-center w-full max-w-md shadow-sm">
+                            <p class="font-bold text-teal-800 mb-2 text-lg"><i class="fas fa-info-circle mr-2"></i>RUMUS RASIO SENILAI</p>
+                            <p class="font-mono bg-white p-2 rounded text-lg text-slate-700">a : b = (a × k) : (b × k)</p>
+                            <p class="text-sm text-slate-500 mt-1">k adalah bilangan yang sama dan bukan nol</p>
+                        </div>
+                    </div>
+                `,
+                narration: "Apakah perbandingan kedua kelompok ini sama? Kelompok pertama memiliki rasio 2:4. Kelompok kedua memiliki rasio 4:8. Jika kedua bilangan pada 2:4 dikalikan dua, kita memperoleh 4:8. Jadi, kedua rasio tersebut senilai."
+            },
+            {
+                id: 5,
+                title: "Adegan 5: Misi Interaktif 1",
+                type: "quiz",
+                visual: `
+                    <div class="text-center fade-in">
+                        <div class="text-5xl mb-4 bg-amber-50 p-6 rounded-2xl shadow-inner border-2 border-amber-200 bounce-slow">
+                            🍪🍪🍪🍪🍪🍪🍪🍪 <br> 🧁🧁🧁🧁
+                        </div>
+                    </div>
+                `,
+                narration: "Sekarang giliranmu, Detektif! Di meja terdapat 8 kue cokelat dan 4 kue vanila. Berapakah rasio kue cokelat terhadap kue vanila dalam bentuk paling sederhana?",
+                quiz: {
+                    question: "Rasio kue cokelat terhadap kue vanila dalam bentuk paling sederhana:",
+                    options: ["1 : 2", "2 : 1", "4 : 8", "8 : 12"],
+                    correct: 1, // Index 1 -> "2 : 1"
+                    successMsg: "Hebat! Jawabannya 2:1. Delapan dan empat sama-sama dibagi empat.",
+                    failMsg: "Belum tepat. Jangan menyerah! Bandingkan cokelat terlebih dahulu, kemudian vanila. Setelah itu, sederhanakan kedua bilangan dengan pembagi yang sama.",
+                    hint: "Kue cokelat ada 8, kue vanila ada 4. Tulis 8:4, lalu bagi kedua angka tersebut dengan 4."
+                }
+            },
+            {
+                id: 6,
+                title: "Adegan 6: Menyelesaikan Masalah",
+                type: "quiz",
+                visual: `
+                    <div class="text-center fade-in w-full max-w-xl">
+                        <div class="flex justify-center items-center gap-6 mb-4">
+                            <div class="bg-orange-50 p-4 rounded-xl border border-orange-200">
+                                <div class="text-4xl mb-2">🍹🍹</div>
+                                <div class="font-bold text-sm text-orange-600">2 Sari Jeruk</div>
+                            </div>
+                            <div class="text-2xl text-slate-400"><i class="fas fa-plus"></i></div>
+                            <div class="bg-cyan-50 p-4 rounded-xl border border-cyan-200">
+                                <div class="text-4xl mb-2">💧💧💧</div>
+                                <div class="font-bold text-sm text-cyan-600">3 Air</div>
+                            </div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow border-l-4 border-yellow-400 text-left">
+                            <p class="font-bold text-slate-700">Jika kita ubah resep menjadi <span class="text-orange-500">4 Gelas Sari Jeruk</span>, berapa gelas air yang diperlukan?</p>
+                        </div>
+                    </div>
+                `,
+                narration: "Untuk membuat minuman, kita menggunakan dua gelas sari jeruk dan tiga gelas air. Rasio sari jeruk terhadap air adalah 2:3. Jika resep diperbesar menjadi empat gelas sari jeruk, berapa gelas air yang diperlukan agar rasio tetap sama?",
+                quiz: {
+                    question: "Berapa gelas air yang diperlukan?",
+                    options: ["3 Gelas", "4 Gelas", "6 Gelas", "8 Gelas"],
+                    correct: 2, // 6 gelas
+                    successMsg: "Luar biasa! Jawabannya enam gelas. Karena sari jeruk berubah dari dua menjadi empat, kita mengalikannya dengan dua. Air juga harus dikalikan dua, dari tiga menjadi enam. Rasio 2:3 dan 4:6 senilai.",
+                    failMsg: "Kurang tepat. Coba perhatikan: 2 sari jeruk dikali berapa agar menjadi 4? Lakukan hal yang sama pada air (3).",
+                    hint: "Sari jeruk dari 2 menjadi 4 (dikali 2). Maka air yang awalnya 3 juga harus dikali 2."
+                }
+            },
+            {
+                id: 7,
+                title: "Adegan 7: Tantangan Detektif (Level 1)",
+                type: "quiz",
+                visual: `
+                    <div class="text-center fade-in">
+                        <div class="inline-block bg-teal-500 text-white px-4 py-1 rounded-full text-sm font-bold mb-4">LEVEL 1 - MUDAH</div>
+                        <div class="text-5xl mb-4 bg-white p-6 rounded-2xl shadow">
+                            👨‍🎓 x10 <span class="mx-4 text-slate-300">|</span> 👩‍🎓 x15
+                        </div>
+                    </div>
+                `,
+                narration: "Waktunya Tantangan Detektif Level 1! Di kelas terdapat 10 siswa laki-laki dan 15 siswa perempuan. Tentukan rasio siswa laki-laki terhadap siswa perempuan dalam bentuk paling sederhana.",
+                quiz: {
+                    question: "Rasio Laki-laki : Perempuan paling sederhana?",
+                    options: ["10 : 15", "15 : 10", "2 : 3", "3 : 2"],
+                    correct: 2, 
+                    successMsg: "Betul sekali! 10 dan 15 bisa dibagi 5, hasilnya 2:3.",
+                    failMsg: "Coba lagi. Laki-laki ada 10, perempuan ada 15 (10:15). Bilangan berapa yang bisa membagi habis 10 dan 15?",
+                    hint: "Laki-laki : Perempuan = 10 : 15. Bagi kedua angka dengan 5."
+                }
+            },
+            {
+                id: 8,
+                title: "Adegan 7: Tantangan Detektif (Level 2)",
+                type: "quiz",
+                visual: `
+                    <div class="text-center fade-in">
+                        <div class="inline-block bg-amber-500 text-white px-4 py-1 rounded-full text-sm font-bold mb-4">LEVEL 2 - SEDANG</div>
+                        <div class="bg-white p-6 rounded-2xl shadow text-left max-w-md mx-auto">
+                            <p class="font-bold text-slate-700 mb-2">Cerita : Pengetahuan = 3 : 5</p>
+                            <p class="text-slate-600">Jumlah Buku Cerita = 12 buku 📚</p>
+                            <p class="text-slate-600 font-bold mt-2">Jumlah Buku Pengetahuan = ? 📘</p>
+                        </div>
+                    </div>
+                `,
+                narration: "Tantangan Level 2. Rasio buku cerita terhadap buku pengetahuan adalah 3:5. Jika buku cerita berjumlah 12, berapa jumlah buku pengetahuan?",
+                quiz: {
+                    question: "Berapa jumlah buku pengetahuan?",
+                    options: ["15 buku", "20 buku", "25 buku", "30 buku"],
+                    correct: 1, 
+                    successMsg: "Tepat! Rasio cerita adalah 3. Agar jadi 12, dikali 4. Maka rasio pengetahuan (5) dikali 4 sama dengan 20.",
+                    failMsg: "Masih keliru. Rasio buku cerita adalah 3 mewakili 12 buku. Satu bagian mewakili berapa buku? (12 ÷ 3). Lalu kalikan dengan rasio buku pengetahuan (5).",
+                    hint: "3 bagian = 12 buku. 1 bagian = 4 buku. Karena buku pengetahuan ada 5 bagian, kalikan 5 dengan 4."
+                }
+            },
+            {
+                id: 9,
+                title: "Adegan 7: Tantangan Detektif (Level 3)",
+                type: "quiz",
+                visual: `
+                    <div class="text-center fade-in">
+                        <div class="inline-block bg-red-500 text-white px-4 py-1 rounded-full text-sm font-bold mb-4">LEVEL 3 - MENANTANG</div>
+                        <div class="bg-slate-800 text-white p-6 rounded-2xl shadow-xl border border-slate-600 max-w-md mx-auto relative overflow-hidden">
+                            <div class="absolute top-0 right-0 p-4 opacity-10"><i class="fas fa-flask text-6xl"></i></div>
+                            <p class="font-bold text-amber-300 mb-2">Sirup : Air = 2 : 7</p>
+                            <p class="text-slate-200">Digunakan 6 Gelas Sirup 🧃</p>
+                            <p class="text-slate-200 font-bold mt-2 text-xl border-t border-slate-600 pt-2">Butuh berapa gelas Air? 💧</p>
+                        </div>
+                    </div>
+                `,
+                narration: "Tantangan Terakhir Level 3! Sebuah campuran memiliki rasio sirup terhadap air sebesar 2:7. Jika digunakan 6 gelas sirup, berapa gelas air yang diperlukan agar rasionya tetap sama?",
+                quiz: {
+                    question: "Berapa gelas air yang diperlukan?",
+                    options: ["14 Gelas", "18 Gelas", "21 Gelas", "28 Gelas"],
+                    correct: 2, 
+                    successMsg: "Sangat brilian! Sirup berubah dari 2 menjadi 6 (dikali 3). Air harus dikali 3 juga, dari 7 menjadi 21.",
+                    failMsg: "Belum tepat, Detektif. Analisa lagi: 2 dikali berapa agar menjadi 6? Kalikan angka 7 (air) dengan bilangan pengali tersebut.",
+                    hint: "Rasio sirup = 2, digunakan 6. Pengalinya = 6 ÷ 2 = 3. Maka kalikan 7 dengan 3."
+                }
+            },
+            {
+                id: 10,
+                title: "Adegan 8: Rangkuman Visual",
+                type: "story",
+                visual: `
+                    <div class="w-full max-w-3xl fade-in bg-white rounded-2xl p-6 shadow-lg border-t-8 border-teal-500">
+                        <h3 class="text-xl font-bold text-center text-teal-600 mb-4">Misi Berhasil! Catatan Detektif 📝</h3>
+                        <ul class="space-y-3 text-slate-700 font-medium">
+                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i> <span>Rasio membandingkan dua kuantitas.</span></li>
+                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i> <span><strong>Urutan</strong> dalam rasio harus diperhatikan.</span></li>
+                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i> <span>Rasio dapat ditulis <em>a : b</em> atau pecahan <em>a/b</em>.</span></li>
+                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i> <span>Rasio senilai diperoleh dengan mengalikan/membagi kedua suku dengan bilangan yang sama.</span></li>
+                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i> <span>Rasio membantu menyelesaikan persoalan sehari-hari.</span></li>
+                        </ul>
+                    </div>
+                `,
+                narration: "Sekarang, kalian sudah mengetahui rahasia rasio! Ingat, perhatikan urutan, tulis perbandingannya dengan tepat, lalu sederhanakan jika diperlukan."
+            },
+            {
+                id: 11,
+                title: "Adegan 9: Refleksi & Penutup",
+                type: "summary",
+                visual: `
+                    <div class="text-center fade-in">
+                        <div class="text-6xl mb-4 bounce-slow">🏆 🎉</div>
+                        <h2 class="text-3xl font-extrabold text-amber-500 mb-6 drop-shadow">Selamat, Detektif Matematika!</h2>
+                        
+                        <div class="bg-blue-50 p-6 rounded-2xl text-left border border-blue-200 inline-block">
+                            <h4 class="font-bold text-slate-700 mb-3 border-b pb-2">Mari Berpikir Sejenak:</h4>
+                            <ul class="list-disc pl-5 space-y-2 text-slate-600 font-medium">
+                                <li>Apa hal baru yang kamu pelajari hari ini?</li>
+                                <li>Bagian mana yang paling mudah dan menantang?</li>
+                                <li>Di mana kamu dapat menemukan rasio dalam kehidupan sehari-hari?</li>
+                            </ul>
+                        </div>
+                    </div>
+                `,
+                narration: "Selamat, Detektif Matematika! Kalian telah menyelesaikan misi rasio. Teruslah bertanya, mencoba, dan menjelaskan alasan dari setiap jawaban. Matematika akan terasa lebih mudah jika kita memahaminya langkah demi langkah. Sampai jumpa di petualangan berikutnya!"
+            }
+        ];
+
+        // --- 2. STATE VARIABLES ---
+        let currentSceneIndex = 0;
+        let voicePref = 'male'; // 'male', 'female', 'none'
+        let speedPref = 1;
+        let showSubtitles = true;
+        let synth = window.speechSynthesis;
+        let isMuted = false;
+        let quizAnsweredCorrectly = false;
+        
+        // --- Audio Context for SFX ---
+        let audioCtx;
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+        
+        function playSound(type) {
+            if(isMuted) return;
+            initAudio();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            if (type === 'correct') {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                oscillator.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.1); // A5
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.5);
+            } else if (type === 'wrong') {
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(300, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.2);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            } else if (type === 'click') {
+                oscillator.type = 'triangle';
+                oscillator.frequency.setValueAtTime(400, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.1);
+            }
+        }
+
+
+        // --- 3. CORE LOGIC ---
+        function setVoice(type) {
+            voicePref = type;
+            document.getElementById('btn-voice-male').className = `px-3 py-1 rounded-full text-sm transition shadow ${type==='male' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`;
+            document.getElementById('btn-voice-female').className = `px-3 py-1 rounded-full text-sm transition shadow ${type==='female' ? 'bg-pink-500 text-white' : 'bg-gray-200 text-gray-700'}`;
+            document.getElementById('btn-voice-none').className = `px-3 py-1 rounded-full text-sm transition shadow ${type==='none' ? 'bg-slate-500 text-white' : 'bg-gray-200 text-gray-700'}`;
+            if(type === 'none') {
+                isMuted = true;
+                synth.cancel();
+            } else {
+                isMuted = false;
+            }
+            playSound('click');
+        }
+
+        function startGame() {
+            // Get Settings
+            speedPref = parseFloat(document.getElementById('speed-select').value);
+            showSubtitles = document.getElementById('subtitle-toggle').checked;
+            
+            initAudio(); // Initialize audio context on user gesture
+            
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+            document.getElementById('game-screen').classList.add('flex');
+            
+            // Subtitle Visibility
+            const subContainer = document.getElementById('subtitle-text').parentElement.parentElement;
+            if(!showSubtitles) {
+                document.getElementById('subtitle-text').style.opacity = "0";
+            }
+            
+            currentSceneIndex = 0;
+            loadScene();
+        }
+
+        function backToMenu() {
+            synth.cancel();
+            playSound('click');
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('flex');
+            document.getElementById('start-screen').classList.remove('hidden');
+        }
+
+        function toggleAudio() {
+            isMuted = !isMuted;
+            const btn = document.getElementById('btn-audio-toggle');
+            if (isMuted) {
+                synth.cancel();
+                btn.innerHTML = '<i class="fas fa-volume-mute text-red-500"></i>';
+                btn.classList.add('bg-red-50');
+            } else {
+                btn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                btn.classList.remove('bg-red-50');
+                speakText(scenes[currentSceneIndex].narration);
+            }
+        }
+
+        function speakText(text) {
+            synth.cancel(); // stop current speaking
+            if (voicePref === 'none' || isMuted) return;
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'id-ID';
+            utterance.rate = speedPref;
+            
+            // Try to find an Indonesian voice
+            const voices = synth.getVoices();
+            const idVoices = voices.filter(v => v.lang.includes('id'));
+            
+            if (idVoices.length > 0) {
+                // If we have options, just pick the first. 
+                // Web Speech API usually only has 1 or 2 per language per browser.
+                utterance.voice = idVoices[0]; 
+            }
+
+            // Simulate male/female using pitch if engine doesn't have distinct voices
+            if (voicePref === 'male') {
+                utterance.pitch = 0.8;
+            } else if (voicePref === 'female') {
+                utterance.pitch = 1.4;
+            }
+
+            synth.speak(utterance);
+        }
+
+        function loadScene() {
+            const scene = scenes[currentSceneIndex];
+            quizAnsweredCorrectly = false;
+            
+            // Update Header & Progress
+            document.getElementById('scene-title').innerText = scene.title;
+            const progressPct = ((currentSceneIndex + 1) / scenes.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPct}%`;
+            
+            // Update Visuals
+            document.getElementById('visual-area').innerHTML = scene.visual;
+            
+            // Update Subtitle
+            document.getElementById('subtitle-text').innerText = scene.narration;
+            
+            // Narration
+            speakText(scene.narration);
+            
+            // Handle Type
+            const quizArea = document.getElementById('quiz-area');
+            const btnNext = document.getElementById('btn-next');
+            const btnPrev = document.getElementById('btn-prev');
+            
+            btnPrev.disabled = currentSceneIndex === 0;
+
+            if (scene.type === 'quiz') {
+                quizArea.classList.remove('hidden');
+                btnNext.disabled = true; // Must answer to proceed
+                btnNext.classList.add('opacity-50', 'cursor-not-allowed');
+                
+                document.getElementById('quiz-question').innerText = scene.quiz.question;
+                
+                let optionsHtml = '';
+                scene.quiz.options.forEach((opt, idx) => {
+                    optionsHtml += `
+                        <button onclick="checkAnswer(${idx})" id="opt-${idx}" class="p-3 bg-white border-2 border-slate-200 rounded-xl font-bold text-slate-700 hover:border-teal-400 hover:bg-teal-50 transition transform hover:scale-105">
+                            ${opt}
+                        </button>
+                    `;
+                });
+                document.getElementById('quiz-options').innerHTML = optionsHtml;
+                
+            } else {
+                quizArea.classList.add('hidden');
+                btnNext.disabled = currentSceneIndex === scenes.length - 1;
+                btnNext.classList.remove('opacity-50', 'cursor-not-allowed');
+                
+                if (currentSceneIndex === scenes.length - 1) {
+                    btnNext.innerHTML = '<i class="fas fa-home"></i>';
+                    btnNext.onclick = backToMenu;
+                } else {
+                    btnNext.innerHTML = '<i class="fas fa-chevron-right"></i>';
+                    btnNext.onclick = nextScene;
+                }
+            }
+        }
+
+        function nextScene() {
+            if (currentSceneIndex < scenes.length - 1) {
+                playSound('click');
+                currentSceneIndex++;
+                loadScene();
+            }
+        }
+
+        function prevScene() {
+            if (currentSceneIndex > 0) {
+                playSound('click');
+                currentSceneIndex--;
+                loadScene();
+            }
+        }
+
+        // --- 4. QUIZ & MODAL LOGIC ---
+        function checkAnswer(selectedIndex) {
+            const scene = scenes[currentSceneIndex];
+            const correctIndex = scene.quiz.correct;
+            
+            const btn = document.getElementById(`opt-${selectedIndex}`);
+            
+            if (selectedIndex === correctIndex) {
+                // Correct
+                playSound('correct');
+                btn.classList.remove('border-slate-200', 'hover:border-teal-400');
+                btn.classList.add('border-green-500', 'bg-green-100', 'text-green-800');
+                
+                quizAnsweredCorrectly = true;
+                
+                // Enable Next Button
+                const btnNext = document.getElementById('btn-next');
+                btnNext.disabled = false;
+                btnNext.classList.remove('opacity-50', 'cursor-not-allowed');
+                btnNext.classList.add('animate-bounce');
+                setTimeout(() => btnNext.classList.remove('animate-bounce'), 2000);
+                
+                showModal('Benar Sekali!', scene.quiz.successMsg, '✅', 'text-green-500');
+                speakText(scene.quiz.successMsg);
+                
+                // Disable all other buttons
+                scene.quiz.options.forEach((_, idx) => {
+                    document.getElementById(`opt-${idx}`).disabled = true;
+                });
+
+            } else {
+                // Wrong
+                playSound('wrong');
+                btn.classList.add('border-red-500', 'bg-red-50', 'animate-shake');
+                setTimeout(() => btn.classList.remove('animate-shake'), 500);
+                
+                showModal('Belum Tepat', scene.quiz.failMsg, '❌', 'text-red-500');
+                speakText(scene.quiz.failMsg);
+            }
+        }
+
+        function showHint() {
+            const scene = scenes[currentSceneIndex];
+            playSound('click');
+            showModal('Petunjuk Detektif', scene.quiz.hint, '💡', 'text-amber-500');
+            speakText(scene.quiz.hint);
+        }
+
+        function showModal(title, body, icon, iconColorClass) {
+            const modal = document.getElementById('custom-modal');
+            const content = document.getElementById('modal-content');
+            
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-body').innerText = body;
+            
+            const iconEl = document.getElementById('modal-icon');
+            iconEl.innerText = icon;
+            iconEl.className = `text-5xl text-center mb-4 ${iconColorClass}`;
+            
+            modal.classList.remove('hidden');
+            // Trigger animation
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            playSound('click');
+            const modal = document.getElementById('custom-modal');
+            const content = document.getElementById('modal-content');
+            
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300); // Wait for transition
+        }
+
+        // Initialize Web Speech voices check to avoid delay on first speak
+        window.speechSynthesis.onvoiceschanged = function() {
+            // Voices loaded
+        };
+
+        // Add shake animation to tailwind manually
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-5px); }
+                75% { transform: translateX(5px); }
+            }
+            .animate-shake { animation: shake 0.3s ease-in-out; }
+        `;
+        document.head.appendChild(style);
+
+    </script>
+</body>
+</html>
